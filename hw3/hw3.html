@@ -1,0 +1,146 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CS 45500 - Homework 3</title>
+  <meta name="description" content="CS 45500 Homework 3">
+  <meta name="author" content="Roger L. Kraft">
+  <link rel="stylesheet" href="http://math.pnw.edu/~rlkraft/roger-v2.css">
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+<!--
+<header>
+  <a href="http://math.pnw.edu/~rlkraft/" title="Roger L. Kraft">Roger L. Kraft</a>
+</header>
+ -->
+<nav>
+  <ul class="nav-list" role="navigation">
+    <li><a href="../cs45500.html">CS 45500</a></li>
+    <li><a href="../syllabus.html">Syllabus</a></li>
+    <li><a href="../class.html">Lectures and Readings</a></li>
+    <li><a href="../homework.html">Homework Assignments</a></li>
+  </ul>
+  <ul class="nav-list" role="navigation">
+    <li><a href="http://math.pnw.edu/~rlkraft/roger.html">Roger Kraft</a></li>
+    <li><a href="https://pnw.edu/computer-science/">Computer Science Department</a></li>
+    <li><a href="https://pnw.edu/engineering/">School of Engineering</a></li>
+    <li><a href="https://pnw.edu/college-of-engineering-sciences/">College of Engineering & Sciences</a></li>
+    <li><a href="https://pnw.edu/">Purdue University Northwest</a></li>
+  </ul>
+</nav>
+
+<section id="Content">
+<h1>
+Programming Assignment 3<br>
+CS 45500<br>
+Computer Graphics<br>
+Fall, 2021
+</h1>
+
+<p>
+This assignment makes use of the files contained in this <a href="hw3.zip">zip file</a>.
+This assignment is due Thursday, November 4.
+</p>
+
+<p>
+For this assignment, you will write an event-driven program that responds to several kinds of mouse, keyboard and window events.
+</p>
+
+<p>
+In the zip file there is an executable jar file, <code>hw3_demo.jar</code>, that you can run. There is also a program file <code>Hw3.java</code>. You need to complete the program file <code>Hw3.java</code> so that it runs the same way as the demo program.
+</p>
+
+<p>
+The program <code>hw3_demo.jar</code> lets you click on geometric shapes and drag them around the window. If you click on a point that is inside of several (overlapping) shapes, then all of the shapes will drag around together. When you release the mouse, or if the mouse moves off of the program window, the shapes stop moving.
+</p>
+
+<p>
+You will need to implement the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/KeyListener.html">KeyListener</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/MouseListener.html">MouseListener</a>, <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/MouseMotionListener.html">MouseMotionListener</a> and <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/ComponentListener.html">ComponentListener</a> interfaces. Outlines of these interfaces are already in the <code>Hw3.java</code> file. You need to write code for (at least) the <code>keyTyped()</code>, <code>mousePressed()</code>, <code>mouseReleased()</code>, <code>mouseExited()</code>, <code>mouseDragged()</code>, and <code>componentResized()</code> methods. I have outlined the <code>Hw3.java</code> program to implement the event handlers in the style where the class <code>Hw3</code> implements all the event listener interfaces, so an instance of the class is its own event handler object.
+</p>
+
+<p>
+If you want to see more examples of event handlers that are similar to the way <code>Hw3.java</code> is set up, look at the example programs in <a href="http://math.pnw.edu/~rlkraft/cs45500/for-class/renderer_2.zip">renderer_2.zip</a>, like <code>InteractiveCube_R2.java</code> or <code>InteractiveTriangle_R2.java</code>, and also look at the example
+</p>
+<center><code>how_to_handle_handlers\InteractiveFrame_v3.java</code></center>
+<p>
+from <a href="http://math.pnw.edu/~rlkraft/cs45500/for-class/java_gui_intro.zip">java_gui_intro.zip</a>.
+</p>
+
+<p>
+Here are some suggestions for writing your program. You have to write this program in several (many) stages. First, give the program very basic event handlers that just print the event objects to <code>stdout</code>. Then, use the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/MouseEvent.html">MouseEvent</a> api to print out just the information that is relevant (like the <code>x</code> and <code>y</code> coordinates of a mouse click). After you get the pixel coordinates of a mouse click, you need to transform the pixel coordinates into the corresponding <code>(x, y, z)</code> coordinates in camera space. The geometric objects are all in the <code>z = -10</code> plane, so you need to transform the 2-dimensional pixel coordinates into the appropriate <code>(x, y)</code> coordinates of the <code>z = -10</code> plane of camera space. Print this information to <code>stdout</code> and then click on several obvious points in the window (like the corners of the squares) and make sure your coordinate transformation is correct.
+</p>
+
+<p>
+Here is a bit more detail about converting pixel coordinates to camera space coordinates. In the zip file there is a document called <code>CS45500-Exam1-formulas.pdf</code>. This document summarizes the mathematical formulas used in the rendering pipeline. The job of the rendering pipeline is to take a point from camera space, project it to a point in the viewplane, take that point from the viewplane and transform it to a point in the pixel-plane, and then map that point from the pixel-plane to a pixel in the framebuffer. Your <code>Hw3</code> program needs to do these exact same step, but in reverse. You start with a pixel in the framebuffer. You need to figure out which point in the pixel-plane represents that framebuffer pixel. Then you need to transform that point in the pixel-plane back to a point in the viewplane, and then back, one more time, to a point in camera space so that you can figure out, in the <code>z = -10</code> plane, which shape, if any, was clicked on. Do these steps using the inverses of the formulas given in <code>CS45500-Exam1-formulas.pdf</code>.
+</p>
+
+<p>
+When you can click on a point and get its correct camera space coordinates, then you are ready to determine if you are clicking inside of a geometric shape. You know the location and size of each shape in the <code>z = -10</code> plane. So you should be able to tell if a mouse click is inside a shape. For each shape, write a boolean <code>hit()</code> method that determines if a mouse click "hits" that shape. Iterate through <code>scene.modelList</code>, check each shape to see if it has been hit and print to  <code>stdout</code> the name of every model that is hit (this code should be in the <code>mousePressed()</code> method). Here is an important hint. You probably don't want your <code>hit()</code> methods to work directly with the 3D models themselves since those models are meant for 3D rendering not hit calculations (all the vertices and line segments in the <code>Circle</code> object are not going to be of much use when you want to see if you clicked within the circle). It would be a good idea for you to create another representation (data structure) for each shape that would be easier to work with when determining hits. For example, for the circle, to check for a hit all you need to know are the circle's center and radius. For each square, you need to know its center and the length of a side. For the diamond, you need to know its center and its "radius" (the distance from the center to a corner). The diamond shape is more like a circle than you might think; they are both <a href="https://mathworld.wolfram.com/Superellipse.html">superellipses</a> and there is an equation for the <a href="https://mathworld.wolfram.com/Diamond.html">diamond</a> similar to the equation for a circle.
+</p>
+
+<p>
+When you can determine if a mouse click is within a shape, you are ready to start working with the <code>mouseDragged()</code> method. A user will press down on the mouse button, drag the mouse, then release the mouse button. You get a call to <code>mousePressed()</code> when the user presses down on the mouse button and you get a call to <code>mouseReleased()</code> when the user releases the mouse button (or a call to <code>mouseExited()</code> if the dragged mouse leaves the window). Between the calls to <code>mousePressed()</code> and <code>mouseReleased()</code>, while the mouse is being dragged, you will get calls to <code>mouseDragged()</code>. Each call you receive to <code>mouseDragged()</code> represents some amount of movement of the mouse, sometimes its just one pixel worth of movement, sometimes it is dozens of pixels worth of movement. You first need to write a simple combination of <code>mousePressed()</code>, <code>mouseDragged()</code>, and <code>mouseReleased()</code> methods that just keeps track of the pixel coordinates of where the mouse is when its pressed, where the mouse is currently at each call to <code>mouseDragged()</code>, and where the mouse is when the mouse is released. Print all this information to <code>stdout</code> and get a feel for how mouse dragging works. Then print all that information in both pixel coordinates and camera coordinates. Then compute the "distance traveled" (in camera coordinates, in both the x-direction and the y-direction) by the mouse between calls to <code>mouseDragged()</code> and print this to <code>stdout</code>. The distance traveled by the mouse in camera coordinates is vital for being able to move a shape by the appropriate amount.
+</p>
+
+<p>
+Now you know when a mouse press lands within a shape and how far a mouse drag moves. So now you can take the <code>x</code> and <code>y</code> distances traveled by the mouse (between calls to the <code>mouseDragged()</code> method) and use them to update the location of a shape that was hit. In the <code>mouseDragged()</code> method, you need to update the <code>x</code> and <code>y</code> coordinates of each vertex in the model by the distance (in camera space) that the mouse moved. Be sure to also update your alternative representation for each dragged model. After updating each dragged model, the scene needs to be rendered again. Your <code>mouseDragged()</code> method should end with a block of code like this.
+<pre>
+    // Render again.
+    FrameBuffer fb = fbp.getFrameBuffer();
+    fb.clearFB();
+    Pipeline.render(scene, fb);
+    fbp.update();
+</pre>
+</p>
+
+<p>
+You should work on the above steps first for just one single shape (either the circle or one of the squares). After you can drag around one shape, extend your code so that it works with all the shapes. Also, as you complete these small steps, it is a good idea to save each small step as an appropriately named file. That way you have both a reminder of how your program was built up and something to fall back to when a mistake makes things hopelessly confused (which happens a lot to all of us).
+</p>
+
+<p>
+The next feature you need to add to your program is to allow the user to resize (and reshape) the window. Try doing this with the demo program. You need to implement the <code>componentResized()</code> method in the <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.desktop/java/awt/event/ComponentListener.html">ComponentListener</a> interface. Your implementation of this method can be exactly like the implementation in the example programs from <a href="http://math.pnw.edu/~rlkraft/cs45500/renderer_2.zip">renderer_2.zip</a>. What you really need to do is modify your code (your formulas) that transforms pixel coordinates to camera coordinates. This code needs to know how many pixels there are going across the view rectangle in each of the <code>x</code> and <code>y</code> directions. One very important thing to realize is that when the user resizes the window and sees the circle become an ellipse, that circle is <b>still</b> a circle in camera coordinates! You <em>do not</em> need to change your <code>hit()</code> methods for determining if a point in camera coordinates is within one of the shapes.
+</p>
+
+<p>
+The last feature you need to add to your program is to implement the <code>'r'</code> and <code>'R'</code> commands. When a window is resized into a rectangular shape, the squares no longer appear square and the circle no longer appears circular. Putting the framebuffer back into a square shape is tricky to do with the mouse. So the <code>'r'</code> and <code>'R'</code> commands have your code make the framebuffer square again. The <code>'r'</code> command should make the framebuffer square using the minimum of the framebuffer's current width and height. The <code>'R'</code> command should make the framebuffer square using the maximum of the framebuffer's current width and height. The code to do this is similar to what is in the <code>componentResized()</code> method. You create a new <code>FrameBuffer</code> object with the desired dimensions, then give the new <code>FrameBuffer</code> object to the <code>FrameBufferPanel</code>. But, unlike <code>componentResized()</code>, you need to tell the <code>JFrame</code> that holds the <code>FrameBufferPanel</code> to <code>repack()</code> itself.
+</p>
+
+<p>
+Here is one little detail that you will need to deal with. When you click on the mouse, you want the pixel coordinates that Java gives you to be relative to the <code>FrameBufferPanel</code> within the window, not relative to the whole Java window. Another way to put this is that pixel <code>(0, 0)</code> should be the upper left hand corner of the framebuffer, not the upper left hand corner of the title bar of the <code>JFrame</code> window. You get the correct pixel coordinates by registering the mouse listeners with the <code>FrameBufferPanel</code>. If you register the mouse listeners with the <code>JFrame</code>, then you will get the slightly off pixel coordinates that are relative to the whole window.
+</p>
+
+<p>
+Here is another useful idea. The steps above tell you to print out a lot of information to <code>stdout</code>. All of that output is useful, so you want to keep the code that produces it. But you don't always want to see all that output. Use the keyboard command <code>i</code> (or add several other keyboard commands) to turn on and off your "debugging" output. (Experiment with the demo program to see an example of some debugging information.)
+</p>
+
+<p>
+Finally, don't be surprised if you need to read this assignment description a dozen (or more) times. There is a lot of information here.
+</p>
+
+<p>
+<a href="http://cs.pnw.edu/~rlkraft/cs45500/handin.html">Turn in</a> a zip file called <code>CS455Hw3Surname.zip</code> (where <code>Surname</code> is your last name) containing your versions of <code>Hw3.java</code>.
+</p>
+
+<p>
+This assignment is due Thursday, November 4.
+</p>
+
+</section>
+
+<footer>
+  <script language="JavaScript" type="text/javascript">
+    document.write("<font size=\"-2\"><i>Last modified on " + document.lastModified + ".<\/i><\/font>");
+  </script>
+  <br>
+  <a href="mailto:rlkraft@pnw.edu"><font size="-2"><i>compliments and criticisms</i></font></a>
+</footer>
+
+</body>
+</html>
